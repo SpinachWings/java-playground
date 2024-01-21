@@ -5,27 +5,34 @@ import java.util.Random;
 
 public class Deck {
 
-    private final List<String> suits = Arrays.asList("hearts", "diamonds", "spades", "clubs");
-    private final List<String> nonNumericValues = Arrays.asList("ace", "jack", "queen", "king");
-    private List<String> deckList = new ArrayList<>();
+    private final CardSuit[] suits;
+    private final CardValue[] values;
+    private final List<String> deckList = new ArrayList<>();
+    private final int jokerIndexForSorting = 99;
 
-    public Deck() {
-        instantiateSuits();
-    }
+    // implement search algorithm?
+    // be able to instantiate decks with and without jokers?
 
-    private void instantiateSuits() {
-        for(String suit : suits){
-            instantiateSuitsWithValues(suit);
+    public Deck(CardSuit[] suits, CardValue[] values, boolean includeJokers) {
+        this.suits = suits;
+        this.values = values;
+        instantiateDeckList();
+        if (includeJokers) {
+            addJokers();
         }
     }
 
-    private void instantiateSuitsWithValues(String suit) {
-        for(String nonNumericValue : nonNumericValues) {
-            deckList.add(nonNumericValue + " of " + suit);
+    private void instantiateDeckList() {
+        for(CardSuit suit : suits){
+            for(CardValue value : values) {
+                deckList.add(value.getValue() + " of " + suit.getSuit());
+            }
         }
+    }
 
-        for(int i = 2 ; i <= 10 ; i++) {
-            deckList.add(i + " of " + suit);
+    private void addJokers() {
+        for (int i = 0 ; i < 2 ; i++) {
+            deckList.add(CardValue.JOKER.getValue());
         }
     }
 
@@ -48,8 +55,8 @@ public class Deck {
         for(int i = 0 ; i < length ; i++){
             for(int j = 1 ; j < (length - i) ; j++){
 
-                int lowValue = getNumericValue(deckList.get(j - 1));
-                int highValue = getNumericValue(deckList.get(j));
+                int lowValue = getValueIndexFromFullCardName(deckList.get(j - 1));
+                int highValue = getValueIndexFromFullCardName(deckList.get(j));
 
                 if(lowValue > highValue) {
                     String lowValueFullCardName = deckList.get(j - 1);
@@ -60,26 +67,16 @@ public class Deck {
         }
     }
 
-    public int getNumericValue(String fullCardName) {
-        String value = fullCardName.split(" of ")[0];
-        int numericValue;
-        switch(value) {
-            case "ace":
-                numericValue = 1;
-                break;
-            case "jack":
-                numericValue = 11;
-                break;
-            case "queen":
-                numericValue = 12;
-                break;
-            case "king":
-                numericValue = 13;
-                break;
-            default:
-                numericValue = Integer.parseInt(value);
+    private int getValueIndexFromFullCardName(String fullCardName) {
+        if (cardIsJoker(fullCardName)) {
+            return jokerIndexForSorting;
         }
-        return numericValue;
+        String value = fullCardName.split(" of ")[0];
+        return CardValue.getByValue(value).getIndex();
+    }
+
+    private boolean cardIsJoker(String fullCardName) {
+        return fullCardName.equals(CardValue.JOKER.getValue());
     }
 
     public void sortBySuit() {
@@ -88,8 +85,8 @@ public class Deck {
         for(int i = 0 ; i < length ; i++){
             for(int j = 1 ; j < (length - i) ; j++){
 
-                int lowValue = getSuitIndex(deckList.get(j - 1));
-                int highValue = getSuitIndex(deckList.get(j));
+                int lowValue = getSuitIndexFromFullCardName(deckList.get(j - 1));
+                int highValue = getSuitIndexFromFullCardName(deckList.get(j));
 
                 if(lowValue > highValue){
                     String lowValueFullCardName = deckList.get(j - 1);
@@ -100,26 +97,12 @@ public class Deck {
         }
     }
 
-    public int getSuitIndex(String fullCardName) {
-        String value = fullCardName.split(" of ")[1];
-        int numericValue;
-        switch(value) {
-            case "spades":
-                numericValue = 1;
-                break;
-            case "clubs":
-                numericValue = 2;
-                break;
-            case "hearts":
-                numericValue = 3;
-                break;
-            case "diamonds":
-                numericValue = 4;
-                break;
-            default:
-                numericValue = Integer.parseInt(value);
+    private int getSuitIndexFromFullCardName(String fullCardName) {
+        if (cardIsJoker(fullCardName)) {
+            return jokerIndexForSorting;
         }
-        return numericValue;
+        String suit = fullCardName.split(" of ")[1];
+        return CardSuit.getBySuit(suit).getIndex();
     }
 
     public List<String> getDeckList() {
