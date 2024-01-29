@@ -1,5 +1,6 @@
+package cards;
+
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -9,9 +10,6 @@ public class Deck {
     private final CardValue[] values;
     private final List<String> deckList = new ArrayList<>();
     private final int jokerIndexForSorting = 99;
-
-    // implement search algorithm?
-    // be able to instantiate decks with and without jokers?
 
     public Deck(CardSuit[] suits, CardValue[] values, boolean includeJokers) {
         this.suits = suits;

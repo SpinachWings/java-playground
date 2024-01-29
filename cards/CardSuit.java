@@ -1,3 +1,5 @@
+package cards;
+
 public enum CardSuit {
     SPADES(0, "Spades"),
     CLUBS(1, "Clubs"),

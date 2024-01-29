@@ -1,7 +1,16 @@
+import cards.CardSuit;
+import cards.CardValue;
+import cards.Deck;
+import graphics.ShapeRenderer;
+import javafx.application.Application;
+
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
+
+        // Deck of cards - arrays, sorting, shuffling, methods, attributes, input & output, enums
+
         Scanner sc = new Scanner(System.in);
 
         System.out.println("You are about to create a deck of cards. Do you want to includes jokers in your deck?");
@@ -25,7 +34,13 @@ public class Main {
         int handledNumberOfActions = determineNumberOfActions(numberOfActions);
 
         handleActions(handledNumberOfActions, deck, sc);
+
+        // Shapes - inheritance, abstract classes, method overriding, JavaFX
+
+        Application.launch(ShapeRenderer.class, args);
     }
+
+    // DECK OF CARDS
 
     private static boolean determineIncludeJokers(int includeJokers) {
         if (includeJokers < 0 || includeJokers > 1) {
