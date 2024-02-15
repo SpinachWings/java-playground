@@ -47,6 +47,7 @@ public class Deck {
         }
     }
 
+    // bubble sort
     public void sortByValue() {
         int length = deckList.size();
 
